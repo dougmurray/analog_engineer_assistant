@@ -3,6 +3,9 @@ pub mod formula;
 
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
+    style::{Color, Modifier, Style},
+    text::{Line, Span},
+    widgets::Paragraph,
     Frame,
 };
 
@@ -11,8 +14,7 @@ use crate::app::{App, Mode};
 pub fn render(f: &mut Frame, app: &App) {
     let area = f.area();
 
-    // Reserve bottom bar for search when in Search mode (or always show hint)
-    let (main_area, bar_area) = split_main_and_bar(area);
+    let (main_area, search_area, cmd_area) = split_areas(area);
 
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
@@ -21,15 +23,71 @@ pub fn render(f: &mut Frame, app: &App) {
 
     nav::render(f, app, chunks[0]);
     formula::render(f, app, chunks[1]);
-    render_search_bar(f, app, bar_area);
+    render_search_bar(f, app, search_area);
+    render_command_bar(f, app, cmd_area);
 }
 
-fn split_main_and_bar(area: Rect) -> (Rect, Rect) {
+fn split_areas(area: Rect) -> (Rect, Rect, Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Min(0), Constraint::Length(3)])
+        .constraints([Constraint::Min(0), Constraint::Length(3), Constraint::Length(1)])
         .split(area);
-    (chunks[0], chunks[1])
+    (chunks[0], chunks[1], chunks[2])
+}
+
+fn render_command_bar(f: &mut Frame, app: &App, area: Rect) {
+    let key = |k: &'static str| Span::styled(k, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+    let desc = |d: &'static str| Span::styled(format!(" {}  ", d), Style::default().fg(Color::DarkGray));
+    let sep = || Span::styled(" ", Style::default());
+
+    let spans: Vec<Span> = match app.mode {
+        Mode::ChapterList => vec![
+            key("j/k"), desc("Move"),
+            sep(),
+            key("l/Enter"), desc("Open"),
+            sep(),
+            key("/"), desc("Search"),
+            sep(),
+            key("q"), desc("Quit"),
+        ],
+        Mode::FormulaList => vec![
+            key("j/k"), desc("Move"),
+            sep(),
+            key("l/Enter"), desc("Open"),
+            sep(),
+            key("h/Esc"), desc("Back"),
+            sep(),
+            key("/"), desc("Search"),
+            sep(),
+            key("q"), desc("Quit"),
+        ],
+        Mode::FormulaView => vec![
+            key("j/k"), desc("Select Input"),
+            sep(),
+            key("i/Enter"), desc("Edit"),
+            sep(),
+            key("Tab"), desc("Cycle Variant"),
+            sep(),
+            key("h/Esc"), desc("Back"),
+            sep(),
+            key("/"), desc("Search"),
+        ],
+        Mode::InputEdit => vec![
+            key("Enter"), desc("Confirm"),
+            sep(),
+            key("Esc"), desc("Cancel"),
+        ],
+        Mode::Search => vec![
+            key("j/k"), desc("Move"),
+            sep(),
+            key("Enter"), desc("Jump to Formula"),
+            sep(),
+            key("Esc"), desc("Cancel"),
+        ],
+    };
+
+    let para = Paragraph::new(Line::from(spans));
+    f.render_widget(para, area);
 }
 
 fn render_search_bar(f: &mut Frame, app: &App, area: Rect) {

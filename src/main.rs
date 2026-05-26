@@ -16,7 +16,7 @@ use ratatui::{backend::CrosstermBackend, Terminal};
 use app::App;
 
 #[derive(Parser)]
-#[command(name = "analog-ref", about = "TI Analog Engineer's Pocket Reference — interactive TUI")]
+#[command(name = "analog_engineer_assistant", about = "TI Analog Engineer's Pocket Reference — interactive TUI")]
 struct Cli {
     /// Open the Conversions chapter
     #[arg(long)] conversions: bool,
