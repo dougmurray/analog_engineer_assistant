@@ -33,6 +33,7 @@ pub struct App {
     // Per-formula input values (indexed by variant input slot)
     pub input_values: Vec<String>,
     pub edit_buffer: String,
+    pub edit_is_fresh: bool,
 
     // Search
     pub search_query: String,
@@ -63,6 +64,7 @@ impl App {
             input_cursor: 0,
             input_values: vec![],
             edit_buffer: String::new(),
+            edit_is_fresh: false,
             search_query: String::new(),
             search_results: vec![],
             search_cursor: 0,
@@ -188,6 +190,7 @@ impl App {
             Char('i') | Enter => {
                 if !self.input_values.is_empty() {
                     self.edit_buffer = self.input_values[self.input_cursor].clone();
+                    self.edit_is_fresh = true;
                     self.mode = Mode::InputEdit;
                 }
             }
@@ -204,16 +207,27 @@ impl App {
                     self.input_values[self.input_cursor] = self.edit_buffer.clone();
                 }
                 self.edit_buffer.clear();
+                self.edit_is_fresh = false;
                 self.mode = Mode::FormulaView;
             }
             Esc => {
                 self.edit_buffer.clear();
+                self.edit_is_fresh = false;
                 self.mode = Mode::FormulaView;
             }
             Backspace => {
-                self.edit_buffer.pop();
+                if self.edit_is_fresh {
+                    self.edit_buffer.clear();
+                    self.edit_is_fresh = false;
+                } else {
+                    self.edit_buffer.pop();
+                }
             }
             Char(c) => {
+                if self.edit_is_fresh {
+                    self.edit_buffer.clear();
+                    self.edit_is_fresh = false;
+                }
                 self.edit_buffer.push(c);
             }
             _ => {}
