@@ -14,3 +14,4 @@ Git clone the repo and in the directory run `cargo run --release` to see it in a
 
 - add user guide
 - more details on how to install for quick execution
+- add Rf section, specifically L, T, and complex source/load matching networks
