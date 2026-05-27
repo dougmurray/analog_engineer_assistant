@@ -1,12 +1,12 @@
-pub mod nav;
 pub mod formula;
+pub mod nav;
 
 use ratatui::{
+    Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
     widgets::Paragraph,
-    Frame,
 };
 
 use crate::app::{App, Mode};
@@ -30,59 +30,90 @@ pub fn render(f: &mut Frame, app: &App) {
 fn split_areas(area: Rect) -> (Rect, Rect, Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Min(0), Constraint::Length(3), Constraint::Length(1)])
+        .constraints([
+            Constraint::Min(0),
+            Constraint::Length(3),
+            Constraint::Length(1),
+        ])
         .split(area);
     (chunks[0], chunks[1], chunks[2])
 }
 
 fn render_command_bar(f: &mut Frame, app: &App, area: Rect) {
-    let key = |k: &'static str| Span::styled(k, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
-    let desc = |d: &'static str| Span::styled(format!(" {}  ", d), Style::default().fg(Color::DarkGray));
+    let key = |k: &'static str| {
+        Span::styled(
+            k,
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        )
+    };
+    let desc =
+        |d: &'static str| Span::styled(format!(" {}  ", d), Style::default().fg(Color::DarkGray));
     let sep = || Span::styled(" ", Style::default());
 
     let spans: Vec<Span> = match app.mode {
-        Mode::ChapterList => vec![
-            key("j/k"), desc("Move"),
+        Mode::TopicList => vec![
+            key("j/k"),
+            desc("Move"),
             sep(),
-            key("l/Enter"), desc("Open"),
+            key("l/Enter"),
+            desc("Open"),
             sep(),
-            key("/"), desc("Search"),
+            key("/"),
+            desc("Search"),
             sep(),
-            key("q"), desc("Quit"),
+            key("q"),
+            desc("Quit"),
         ],
         Mode::FormulaList => vec![
-            key("j/k"), desc("Move"),
+            key("j/k"),
+            desc("Move"),
             sep(),
-            key("l/Enter"), desc("Open"),
+            key("l/Enter"),
+            desc("Open"),
             sep(),
-            key("h/Esc"), desc("Back"),
+            key("h/Esc"),
+            desc("Back"),
             sep(),
-            key("/"), desc("Search"),
+            key("/"),
+            desc("Search"),
             sep(),
-            key("q"), desc("Quit"),
+            key("q"),
+            desc("Quit"),
         ],
         Mode::FormulaView => vec![
-            key("j/k"), desc("Select Input"),
+            key("j/k"),
+            desc("Select Input"),
             sep(),
-            key("i/Enter"), desc("Edit"),
+            key("i/Enter"),
+            desc("Edit"),
             sep(),
-            key("Tab"), desc("Cycle Variant"),
+            key("Tab"),
+            desc("Cycle Variant"),
             sep(),
-            key("h/Esc"), desc("Back"),
+            key("h/Esc"),
+            desc("Back"),
             sep(),
-            key("/"), desc("Search"),
+            key("/"),
+            desc("Search"),
         ],
         Mode::InputEdit => vec![
-            key("Enter"), desc("Confirm"),
+            key("Enter"),
+            desc("Confirm"),
             sep(),
-            key("Esc"), desc("Cancel"),
+            key("Esc"),
+            desc("Cancel"),
         ],
         Mode::Search => vec![
-            key("j/k"), desc("Move"),
+            key("j/k"),
+            desc("Move"),
             sep(),
-            key("Enter"), desc("Jump to Formula"),
+            key("Enter"),
+            desc("Jump to Formula"),
             sep(),
-            key("Esc"), desc("Cancel"),
+            key("Esc"),
+            desc("Cancel"),
         ],
     };
 
@@ -100,16 +131,18 @@ fn render_search_bar(f: &mut Frame, app: &App, area: Rect) {
     let is_searching = app.mode == Mode::Search;
 
     let label = if is_searching {
-        Span::styled("/ ", Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
+        Span::styled(
+            "/ ",
+            Style::default()
+                .fg(Color::Yellow)
+                .add_modifier(Modifier::BOLD),
+        )
     } else {
         Span::styled("Press / to search", Style::default().fg(Color::DarkGray))
     };
 
     let content = if is_searching {
-        let query = Span::styled(
-            app.search_query.as_str(),
-            Style::default().fg(Color::White),
-        );
+        let query = Span::styled(app.search_query.as_str(), Style::default().fg(Color::White));
         let cursor = Span::styled("█", Style::default().fg(Color::Yellow));
         Line::from(vec![label, query, cursor])
     } else {

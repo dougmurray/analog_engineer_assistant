@@ -1,9 +1,9 @@
 use ratatui::{
+    Frame,
     layout::Rect,
     style::{Color, Modifier, Style},
     text::{Line, Span},
     widgets::{Block, Borders, List, ListItem, ListState},
-    Frame,
 };
 
 use crate::app::{App, Mode};
@@ -11,18 +11,20 @@ use crate::app::{App, Mode};
 pub fn render(f: &mut Frame, app: &App, area: Rect) {
     match app.mode {
         Mode::Search => render_search_results(f, app, area),
-        Mode::FormulaList | Mode::FormulaView | Mode::InputEdit => render_formula_list(f, app, area),
-        Mode::ChapterList => render_chapter_list(f, app, area),
+        Mode::FormulaList | Mode::FormulaView | Mode::InputEdit => {
+            render_formula_list(f, app, area)
+        }
+        Mode::TopicList => render_topic_list(f, app, area),
     }
 }
 
-fn render_chapter_list(f: &mut Frame, app: &App, area: Rect) {
+fn render_topic_list(f: &mut Frame, app: &App, area: Rect) {
     let items: Vec<ListItem> = app
-        .chapters
+        .topics
         .iter()
         .enumerate()
         .map(|(i, ch)| {
-            let style = if i == app.chapter_cursor {
+            let style = if i == app.topic_cursor {
                 Style::default()
                     .fg(Color::Black)
                     .bg(Color::Cyan)
@@ -30,15 +32,18 @@ fn render_chapter_list(f: &mut Frame, app: &App, area: Rect) {
             } else {
                 Style::default().fg(Color::White)
             };
-            ListItem::new(Line::from(vec![Span::styled(format!("  {}", ch.name), style)]))
+            ListItem::new(Line::from(vec![Span::styled(
+                format!("  {}", ch.name),
+                style,
+            )]))
         })
         .collect();
 
     let mut state = ListState::default();
-    state.select(Some(app.chapter_cursor));
+    state.select(Some(app.topic_cursor));
 
     let block = Block::default()
-        .title(" Chapters ")
+        .title(" Topics ")
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Cyan));
 
@@ -47,7 +52,7 @@ fn render_chapter_list(f: &mut Frame, app: &App, area: Rect) {
 }
 
 fn render_formula_list(f: &mut Frame, app: &App, area: Rect) {
-    let ch = app.current_chapter();
+    let ch = app.current_topic();
     let items: Vec<ListItem> = ch
         .formulas
         .iter()

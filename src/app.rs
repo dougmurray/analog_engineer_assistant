@@ -1,11 +1,11 @@
-use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+use fuzzy_matcher::{FuzzyMatcher, skim::SkimMatcherV2};
 
-use crate::formulas::{all_chapters, Chapter};
+use crate::formulas::{Topic, all_topics};
 use crate::input::{format_eng, parse_value};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum Mode {
-    ChapterList,
+    TopicList,
     FormulaList,
     FormulaView,
     InputEdit,
@@ -14,21 +14,21 @@ pub enum Mode {
 
 #[derive(Clone, Debug)]
 pub struct SearchResult {
-    pub chapter_idx: usize,
+    pub topic_idx: usize,
     pub formula_idx: usize,
     pub score: i64,
     pub label: String,
 }
 
 pub struct App {
-    pub chapters: Vec<Chapter>,
+    pub topics: Vec<Topic>,
     pub mode: Mode,
 
     // Navigation
-    pub chapter_cursor: usize,
+    pub topic_cursor: usize,
     pub formula_cursor: usize,
-    pub variant_idx: usize,   // which "solve for" variant is active
-    pub input_cursor: usize,  // which variable field is focused
+    pub variant_idx: usize,  // which "solve for" variant is active
+    pub input_cursor: usize, // which variable field is focused
 
     // Per-formula input values (indexed by variant input slot)
     pub input_values: Vec<String>,
@@ -41,24 +41,24 @@ pub struct App {
     pub search_cursor: usize,
 
     // Previous mode to restore on Esc from search
-    prev_chapter: usize,
+    prev_topic: usize,
     prev_formula: usize,
     prev_variant: usize,
 }
 
 impl App {
-    pub fn new(jump_chapter: Option<usize>) -> Self {
-        let chapters = all_chapters();
-        let chapter_cursor = jump_chapter.unwrap_or(0).min(chapters.len().saturating_sub(1));
-        let mode = if jump_chapter.is_some() {
+    pub fn new(jump_topic: Option<usize>) -> Self {
+        let topics = all_topics();
+        let topic_cursor = jump_topic.unwrap_or(0).min(topics.len().saturating_sub(1));
+        let mode = if jump_topic.is_some() {
             Mode::FormulaList
         } else {
-            Mode::ChapterList
+            Mode::TopicList
         };
         let mut app = Self {
-            chapters,
+            topics,
             mode,
-            chapter_cursor,
+            topic_cursor,
             formula_cursor: 0,
             variant_idx: 0,
             input_cursor: 0,
@@ -68,7 +68,7 @@ impl App {
             search_query: String::new(),
             search_results: vec![],
             search_cursor: 0,
-            prev_chapter: 0,
+            prev_topic: 0,
             prev_formula: 0,
             prev_variant: 0,
         };
@@ -76,12 +76,12 @@ impl App {
         app
     }
 
-    pub fn current_chapter(&self) -> &Chapter {
-        &self.chapters[self.chapter_cursor]
+    pub fn current_topic(&self) -> &Topic {
+        &self.topics[self.topic_cursor]
     }
 
     pub fn current_variant(&self) -> Option<&crate::formulas::SolveVariant> {
-        let ch = self.current_chapter();
+        let ch = self.current_topic();
         if self.formula_cursor >= ch.formulas.len() {
             return None;
         }
@@ -91,11 +91,7 @@ impl App {
 
     fn reset_inputs(&mut self) {
         if let Some(v) = self.current_variant() {
-            self.input_values = v
-                .inputs
-                .iter()
-                .map(|vd| format_eng(vd.default))
-                .collect();
+            self.input_values = v.inputs.iter().map(|vd| format_eng(vd.default)).collect();
         } else {
             self.input_values = vec![];
         }
@@ -127,43 +123,47 @@ impl App {
         }
 
         match self.mode.clone() {
-            Mode::ChapterList  => self.handle_chapter_list(key),
-            Mode::FormulaList  => self.handle_formula_list(key),
-            Mode::FormulaView  => self.handle_formula_view(key),
-            Mode::InputEdit    => self.handle_input_edit(key),
-            Mode::Search       => self.handle_search(key),
+            Mode::TopicList => self.handle_topic_list(key),
+            Mode::FormulaList => self.handle_formula_list(key),
+            Mode::FormulaView => self.handle_formula_view(key),
+            Mode::InputEdit => self.handle_input_edit(key),
+            Mode::Search => self.handle_search(key),
         }
     }
 
-    fn handle_chapter_list(&mut self, key: crossterm::event::KeyCode) {
+    fn handle_topic_list(&mut self, key: crossterm::event::KeyCode) {
         use crossterm::event::KeyCode::*;
         match key {
-            Char('j') | Down  => self.chapter_cursor = (self.chapter_cursor + 1).min(self.chapters.len() - 1),
-            Char('k') | Up    => self.chapter_cursor = self.chapter_cursor.saturating_sub(1),
+            Char('j') | Down => {
+                self.topic_cursor = (self.topic_cursor + 1).min(self.topics.len() - 1)
+            }
+            Char('k') | Up => self.topic_cursor = self.topic_cursor.saturating_sub(1),
             Char('l') | Enter => {
                 self.formula_cursor = 0;
-                self.variant_idx    = 0;
+                self.variant_idx = 0;
                 self.reset_inputs();
                 self.mode = Mode::FormulaList;
             }
-            Char('q') => self.mode = Mode::ChapterList, // handled by main loop
+            Char('q') => self.mode = Mode::TopicList, // handled by main loop
             _ => {}
         }
     }
 
     fn handle_formula_list(&mut self, key: crossterm::event::KeyCode) {
         use crossterm::event::KeyCode::*;
-        let n = self.current_chapter().formulas.len();
+        let n = self.current_topic().formulas.len();
         match key {
-            Char('j') | Down  => self.formula_cursor = (self.formula_cursor + 1).min(n.saturating_sub(1)),
-            Char('k') | Up    => self.formula_cursor = self.formula_cursor.saturating_sub(1),
+            Char('j') | Down => {
+                self.formula_cursor = (self.formula_cursor + 1).min(n.saturating_sub(1))
+            }
+            Char('k') | Up => self.formula_cursor = self.formula_cursor.saturating_sub(1),
             Char('l') | Enter => {
-                self.variant_idx  = 0;
+                self.variant_idx = 0;
                 self.input_cursor = 0;
                 self.reset_inputs();
                 self.mode = Mode::FormulaView;
             }
-            Char('h') | Char('g') | Esc | Backspace => self.mode = Mode::ChapterList,
+            Char('h') | Char('g') | Esc | Backspace => self.mode = Mode::TopicList,
             _ => {}
         }
     }
@@ -172,7 +172,7 @@ impl App {
         use crossterm::event::KeyCode::*;
         match key {
             Tab => {
-                if let Some(f) = self.current_chapter().formulas.get(self.formula_cursor) {
+                if let Some(f) = self.current_topic().formulas.get(self.formula_cursor) {
                     let n = f.variants.len();
                     self.variant_idx = (self.variant_idx + 1) % n;
                     self.reset_inputs();
@@ -237,7 +237,7 @@ impl App {
     // ── Search ────────────────────────────────────────────────────────────────
 
     fn open_search(&mut self) {
-        self.prev_chapter = self.chapter_cursor;
+        self.prev_topic = self.topic_cursor;
         self.prev_formula = self.formula_cursor;
         self.prev_variant = self.variant_idx;
         self.search_query.clear();
@@ -250,7 +250,7 @@ impl App {
         let matcher = SkimMatcherV2::default();
         let mut results: Vec<SearchResult> = vec![];
 
-        for (ci, ch) in self.chapters.iter().enumerate() {
+        for (ci, ch) in self.topics.iter().enumerate() {
             for (fi, formula) in ch.formulas.iter().enumerate() {
                 let label = format!("{}  ›  {}", ch.name, formula.name);
                 let haystack = label.to_lowercase();
@@ -263,7 +263,7 @@ impl App {
                 };
                 if self.search_query.is_empty() || score >= 0 {
                     results.push(SearchResult {
-                        chapter_idx: ci,
+                        topic_idx: ci,
                         formula_idx: fi,
                         score,
                         label,
@@ -283,22 +283,22 @@ impl App {
         use crossterm::event::KeyCode::*;
         match key {
             Esc => {
-                self.chapter_cursor = self.prev_chapter;
+                self.topic_cursor = self.prev_topic;
                 self.formula_cursor = self.prev_formula;
-                self.variant_idx    = self.prev_variant;
+                self.variant_idx = self.prev_variant;
                 self.search_query.clear();
-                if self.prev_formula < self.chapters[self.prev_chapter].formulas.len() {
+                if self.prev_formula < self.topics[self.prev_topic].formulas.len() {
                     self.reset_inputs();
                     self.mode = Mode::FormulaView;
                 } else {
-                    self.mode = Mode::ChapterList;
+                    self.mode = Mode::TopicList;
                 }
             }
             Enter => {
                 if let Some(r) = self.search_results.get(self.search_cursor).cloned() {
-                    self.chapter_cursor = r.chapter_idx;
+                    self.topic_cursor = r.topic_idx;
                     self.formula_cursor = r.formula_idx;
-                    self.variant_idx    = 0;
+                    self.variant_idx = 0;
                     self.reset_inputs();
                     self.search_query.clear();
                     self.mode = Mode::FormulaView;
@@ -327,7 +327,6 @@ impl App {
 
     pub fn should_quit(&self, key: crossterm::event::KeyCode) -> bool {
         key == crossterm::event::KeyCode::Char('q')
-            && (self.mode == Mode::ChapterList || self.mode == Mode::FormulaList)
+            && (self.mode == Mode::TopicList || self.mode == Mode::FormulaList)
     }
 }
-

@@ -8,10 +8,30 @@ pub fn formulas() -> Vec<FormulaEntry> {
                 solves_for: "T",
                 expression: "1/T = a + b·ln(R) + c·[ln(R)]³",
                 inputs: &[
-                    VarDef { symbol: "R", name: "Resistance",   unit: "Ω",    default: 10000.0  },
-                    VarDef { symbol: "a", name: "S-H coeff a",  unit: "K⁻¹",  default: 1.129e-3 },
-                    VarDef { symbol: "b", name: "S-H coeff b",  unit: "K⁻¹",  default: 2.341e-4 },
-                    VarDef { symbol: "c", name: "S-H coeff c",  unit: "K⁻¹",  default: 8.776e-8 },
+                    VarDef {
+                        symbol: "R",
+                        name: "Resistance",
+                        unit: "Ω",
+                        default: 10000.0,
+                    },
+                    VarDef {
+                        symbol: "a",
+                        name: "S-H coeff a",
+                        unit: "K⁻¹",
+                        default: 1.129e-3,
+                    },
+                    VarDef {
+                        symbol: "b",
+                        name: "S-H coeff b",
+                        unit: "K⁻¹",
+                        default: 2.341e-4,
+                    },
+                    VarDef {
+                        symbol: "c",
+                        name: "S-H coeff c",
+                        unit: "K⁻¹",
+                        default: 8.776e-8,
+                    },
                 ],
                 output_unit: "°C",
                 compute: |v| {
@@ -27,10 +47,30 @@ pub fn formulas() -> Vec<FormulaEntry> {
                 solves_for: "R",
                 expression: "R = exp[(y − x/2)^(1/3) − (y + x/2)^(1/3)]",
                 inputs: &[
-                    VarDef { symbol: "T", name: "Temperature",  unit: "°C",   default: 25.0     },
-                    VarDef { symbol: "a", name: "S-H coeff a",  unit: "K⁻¹",  default: 1.129e-3 },
-                    VarDef { symbol: "b", name: "S-H coeff b",  unit: "K⁻¹",  default: 2.341e-4 },
-                    VarDef { symbol: "c", name: "S-H coeff c",  unit: "K⁻¹",  default: 8.776e-8 },
+                    VarDef {
+                        symbol: "T",
+                        name: "Temperature",
+                        unit: "°C",
+                        default: 25.0,
+                    },
+                    VarDef {
+                        symbol: "a",
+                        name: "S-H coeff a",
+                        unit: "K⁻¹",
+                        default: 1.129e-3,
+                    },
+                    VarDef {
+                        symbol: "b",
+                        name: "S-H coeff b",
+                        unit: "K⁻¹",
+                        default: 2.341e-4,
+                    },
+                    VarDef {
+                        symbol: "c",
+                        name: "S-H coeff c",
+                        unit: "K⁻¹",
+                        default: 8.776e-8,
+                    },
                 ],
                 output_unit: "Ω",
                 compute: |v| {
@@ -48,10 +88,30 @@ pub fn formulas() -> Vec<FormulaEntry> {
                 solves_for: "V_D",
                 expression: "V_D = (nkT/q) × ln(I / I_s)",
                 inputs: &[
-                    VarDef { symbol: "I",   name: "Forward current",   unit: "A", default: 1e-3  },
-                    VarDef { symbol: "I_s", name: "Saturation current",unit: "A", default: 1e-12 },
-                    VarDef { symbol: "T",   name: "Temperature",        unit: "°C", default: 25.0 },
-                    VarDef { symbol: "n",   name: "Ideality factor",    unit: "",   default: 1.0  },
+                    VarDef {
+                        symbol: "I",
+                        name: "Forward current",
+                        unit: "A",
+                        default: 1e-3,
+                    },
+                    VarDef {
+                        symbol: "I_s",
+                        name: "Saturation current",
+                        unit: "A",
+                        default: 1e-12,
+                    },
+                    VarDef {
+                        symbol: "T",
+                        name: "Temperature",
+                        unit: "°C",
+                        default: 25.0,
+                    },
+                    VarDef {
+                        symbol: "n",
+                        name: "Ideality factor",
+                        unit: "",
+                        default: 1.0,
+                    },
                 ],
                 output_unit: "V",
                 compute: |v| {
@@ -67,10 +127,30 @@ pub fn formulas() -> Vec<FormulaEntry> {
                 solves_for: "I_s",
                 expression: "I_s = α × T^(3/n) × exp(qV_G / (nkT))",
                 inputs: &[
-                    VarDef { symbol: "α",   name: "Junction area constant", unit: "",    default: 1e-8  },
-                    VarDef { symbol: "T",   name: "Temperature",            unit: "°C",  default: 25.0  },
-                    VarDef { symbol: "V_G", name: "Diode voltage",          unit: "V",   default: 0.6   },
-                    VarDef { symbol: "n",   name: "Ideality factor",        unit: "",    default: 1.0   },
+                    VarDef {
+                        symbol: "α",
+                        name: "Junction area constant",
+                        unit: "",
+                        default: 1e-8,
+                    },
+                    VarDef {
+                        symbol: "T",
+                        name: "Temperature",
+                        unit: "°C",
+                        default: 25.0,
+                    },
+                    VarDef {
+                        symbol: "V_G",
+                        name: "Diode voltage",
+                        unit: "V",
+                        default: 0.6,
+                    },
+                    VarDef {
+                        symbol: "n",
+                        name: "Ideality factor",
+                        unit: "",
+                        default: 1.0,
+                    },
                 ],
                 output_unit: "A",
                 compute: |v| {

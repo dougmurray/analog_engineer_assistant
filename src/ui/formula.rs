@@ -1,9 +1,9 @@
 use ratatui::{
+    Frame,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Wrap},
-    Frame,
 };
 
 use crate::app::{App, Mode};
@@ -11,14 +11,14 @@ use crate::input::{format_eng, parse_value};
 
 pub fn render(f: &mut Frame, app: &App, area: Rect) {
     match app.mode {
-        Mode::ChapterList => render_chapter_preview(f, app, area),
+        Mode::TopicList => render_topic_preview(f, app, area),
         Mode::Search => render_search_preview(f, app, area),
         _ => render_formula_calc(f, app, area),
     }
 }
 
-fn render_chapter_preview(f: &mut Frame, app: &App, area: Rect) {
-    let ch = app.current_chapter();
+fn render_topic_preview(f: &mut Frame, app: &App, area: Rect) {
+    let ch = app.current_topic();
     let formula_names: Vec<Line> = ch
         .formulas
         .iter()
@@ -44,7 +44,7 @@ fn render_chapter_preview(f: &mut Frame, app: &App, area: Rect) {
 fn render_search_preview(f: &mut Frame, app: &App, area: Rect) {
     // Show the formula for the currently highlighted search result
     if let Some(result) = app.search_results.get(app.search_cursor) {
-        let ch = &app.chapters[result.chapter_idx];
+        let ch = &app.topics[result.topic_idx];
         if let Some(formula) = ch.formulas.get(result.formula_idx)
             && let Some(variant) = formula.variants.first()
         {
@@ -65,13 +65,18 @@ fn render_variant_info(
     area: Rect,
     variant: &crate::formulas::SolveVariant,
     formula_name: &str,
-    chapter_name: &str,
+    topic_name: &str,
 ) {
     let mut lines = vec![
         Line::from(vec![
-            Span::styled(chapter_name, Style::default().fg(Color::DarkGray)),
+            Span::styled(topic_name, Style::default().fg(Color::DarkGray)),
             Span::raw("  ›  "),
-            Span::styled(formula_name, Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                formula_name,
+                Style::default()
+                    .fg(Color::White)
+                    .add_modifier(Modifier::BOLD),
+            ),
         ]),
         Line::raw(""),
         Line::from(vec![Span::styled(
@@ -88,7 +93,10 @@ fn render_variant_info(
         lines.push(Line::from(vec![
             Span::raw(format!("  {}  ", vd.symbol)),
             Span::styled(vd.name, Style::default().fg(Color::White)),
-            Span::styled(format!("  [{}]", vd.unit), Style::default().fg(Color::DarkGray)),
+            Span::styled(
+                format!("  [{}]", vd.unit),
+                Style::default().fg(Color::DarkGray),
+            ),
         ]));
     }
 
@@ -96,12 +104,14 @@ fn render_variant_info(
         .title(" Preview ")
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Yellow));
-    let para = Paragraph::new(lines).block(block).wrap(Wrap { trim: false });
+    let para = Paragraph::new(lines)
+        .block(block)
+        .wrap(Wrap { trim: false });
     f.render_widget(para, area);
 }
 
 fn render_formula_calc(f: &mut Frame, app: &App, area: Rect) {
-    let ch = app.current_chapter();
+    let ch = app.current_topic();
     let formula = match ch.formulas.get(app.formula_cursor) {
         Some(f) => f,
         None => return,
@@ -128,12 +138,16 @@ fn render_expression_block(
     name: &str,
     variant: &crate::formulas::SolveVariant,
 ) {
-    let n_variants = app.current_chapter().formulas[app.formula_cursor].variants.len();
+    let n_variants = app.current_topic().formulas[app.formula_cursor]
+        .variants
+        .len();
 
     let mut lines = vec![
         Line::from(vec![Span::styled(
             name,
-            Style::default().fg(Color::White).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(Color::White)
+                .add_modifier(Modifier::BOLD),
         )]),
         Line::raw(""),
         Line::from(vec![Span::styled(
@@ -156,13 +170,15 @@ fn render_expression_block(
 
     lines.push(Line::from(vec![Span::styled(
         result_str,
-        Style::default().fg(Color::Green).add_modifier(Modifier::BOLD),
+        Style::default()
+            .fg(Color::Green)
+            .add_modifier(Modifier::BOLD),
     )]));
 
     // Solve-for tab hint
     if n_variants > 1 {
         lines.push(Line::raw(""));
-        let tabs: Vec<Span> = app.current_chapter().formulas[app.formula_cursor]
+        let tabs: Vec<Span> = app.current_topic().formulas[app.formula_cursor]
             .variants
             .iter()
             .enumerate()
@@ -180,9 +196,15 @@ fn render_expression_block(
                 }
             })
             .collect();
-        let mut tab_line = vec![Span::styled("  Solve for: ", Style::default().fg(Color::DarkGray))];
+        let mut tab_line = vec![Span::styled(
+            "  Solve for: ",
+            Style::default().fg(Color::DarkGray),
+        )];
         tab_line.extend(tabs);
-        tab_line.push(Span::styled("  (Tab)", Style::default().fg(Color::DarkGray)));
+        tab_line.push(Span::styled(
+            "  (Tab)",
+            Style::default().fg(Color::DarkGray),
+        ));
         lines.push(Line::from(tab_line));
     }
 
@@ -191,7 +213,9 @@ fn render_expression_block(
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Cyan));
 
-    let para = Paragraph::new(lines).block(block).wrap(Wrap { trim: false });
+    let para = Paragraph::new(lines)
+        .block(block)
+        .wrap(Wrap { trim: false });
     f.render_widget(para, area);
 }
 
@@ -212,7 +236,7 @@ fn render_inputs_block(
 
     for (i, vd) in variant.inputs.iter().enumerate() {
         let selected = i == app.input_cursor;
-        let editing  = selected && is_editing;
+        let editing = selected && is_editing;
 
         let value_str = if editing {
             format!("{}█", app.edit_buffer)
@@ -232,13 +256,19 @@ fn render_inputs_block(
 
         let (sym_style, val_style, row_bg) = if editing {
             (
-                Style::default().fg(Color::Black).bg(Color::Yellow).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(Color::Black)
+                    .bg(Color::Yellow)
+                    .add_modifier(Modifier::BOLD),
                 Style::default().fg(Color::Black).bg(Color::Yellow),
                 Color::Yellow,
             )
         } else if selected {
             (
-                Style::default().fg(Color::Black).bg(Color::Green).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(Color::Black)
+                    .bg(Color::Green)
+                    .add_modifier(Modifier::BOLD),
                 Style::default().fg(Color::Black).bg(Color::Green),
                 Color::Green,
             )

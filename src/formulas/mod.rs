@@ -1,12 +1,12 @@
-pub mod conversions;
-pub mod basics;
+pub mod adc;
 pub mod amplifiers;
+pub mod basics;
+pub mod conversions;
+pub mod dac;
+pub mod digital;
+pub mod multiplexer;
 pub mod pcb_wire;
 pub mod sensor;
-pub mod digital;
-pub mod adc;
-pub mod dac;
-pub mod multiplexer;
 
 #[derive(Clone)]
 pub struct VarDef {
@@ -32,21 +32,48 @@ pub struct FormulaEntry {
 }
 
 #[derive(Clone)]
-pub struct Chapter {
+pub struct Topic {
     pub name: &'static str,
     pub formulas: Vec<FormulaEntry>,
 }
 
-pub fn all_chapters() -> Vec<Chapter> {
+pub fn all_topics() -> Vec<Topic> {
     vec![
-        Chapter { name: "Conversions",  formulas: conversions::formulas() },
-        Chapter { name: "The Basics",   formulas: basics::formulas() },
-        Chapter { name: "Amplifiers",   formulas: amplifiers::formulas() },
-        Chapter { name: "PCB and Wire", formulas: pcb_wire::formulas() },
-        Chapter { name: "Sensor",       formulas: sensor::formulas() },
-        Chapter { name: "Digital",      formulas: digital::formulas() },
-        Chapter { name: "ADC",          formulas: adc::formulas() },
-        Chapter { name: "DAC",          formulas: dac::formulas() },
-        Chapter { name: "Multiplexer",  formulas: multiplexer::formulas() },
+        Topic {
+            name: "Conversions",
+            formulas: conversions::formulas(),
+        },
+        Topic {
+            name: "The Basics",
+            formulas: basics::formulas(),
+        },
+        Topic {
+            name: "Amplifiers",
+            formulas: amplifiers::formulas(),
+        },
+        Topic {
+            name: "PCB and Wire",
+            formulas: pcb_wire::formulas(),
+        },
+        Topic {
+            name: "Sensor",
+            formulas: sensor::formulas(),
+        },
+        Topic {
+            name: "Digital",
+            formulas: digital::formulas(),
+        },
+        Topic {
+            name: "ADC",
+            formulas: adc::formulas(),
+        },
+        Topic {
+            name: "DAC",
+            formulas: dac::formulas(),
+        },
+        Topic {
+            name: "Multiplexer",
+            formulas: multiplexer::formulas(),
+        },
     ]
 }

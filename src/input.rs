@@ -11,14 +11,14 @@ pub fn parse_value(s: &str) -> Option<f64> {
         // Don't treat 'e'/'E' suffix as SI — it's part of sci notation
         let has_exp = s.to_lowercase().contains('e');
         match last {
-            'p' if !has_exp => (&s[..s.len()-1], 1e-12),
-            'n' if !has_exp => (&s[..s.len()-1], 1e-9),
-            'u' if !has_exp => (&s[..s.len()-1], 1e-6),
-            'm' if !has_exp => (&s[..s.len()-1], 1e-3),
-            'k' | 'K' if !has_exp => (&s[..s.len()-1], 1e3),
-            'M' if !has_exp => (&s[..s.len()-1], 1e6),
-            'G' if !has_exp => (&s[..s.len()-1], 1e9),
-            'T' if !has_exp => (&s[..s.len()-1], 1e12),
+            'p' if !has_exp => (&s[..s.len() - 1], 1e-12),
+            'n' if !has_exp => (&s[..s.len() - 1], 1e-9),
+            'u' if !has_exp => (&s[..s.len() - 1], 1e-6),
+            'm' if !has_exp => (&s[..s.len() - 1], 1e-3),
+            'k' | 'K' if !has_exp => (&s[..s.len() - 1], 1e3),
+            'M' if !has_exp => (&s[..s.len() - 1], 1e6),
+            'G' if !has_exp => (&s[..s.len() - 1], 1e9),
+            'T' if !has_exp => (&s[..s.len() - 1], 1e12),
             _ => (s, 1.0),
         }
     } else {
