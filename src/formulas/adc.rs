@@ -4,49 +4,113 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "Full-Scale Range",
-            variants: &[SolveVariant {
-                solves_for: "FSR",
-                expression: "FSR = V_REF / PGA",
-                inputs: &[
-                    VarDef {
-                        symbol: "V_REF",
-                        name: "Reference voltage",
-                        unit: "V",
-                        default: 5.0,
-                    },
-                    VarDef {
-                        symbol: "PGA",
-                        name: "PGA gain",
-                        unit: "V/V",
-                        default: 1.0,
-                    },
-                ],
-                output_unit: "V",
-                compute: |v| v[0] / v[1],
-            }],
+            variants: &[
+                SolveVariant {
+                    solves_for: "FSR",
+                    expression: "FSR = V_REF / PGA",
+                    inputs: &[
+                        VarDef {
+                            symbol: "V_REF",
+                            name: "Reference voltage",
+                            unit: "V",
+                            default: 5.0,
+                        },
+                        VarDef {
+                            symbol: "PGA",
+                            name: "PGA gain",
+                            unit: "V/V",
+                            default: 1.0,
+                        },
+                    ],
+                    output_unit: "V",
+                    compute: |v| v[0] / v[1],
+                },
+                SolveVariant {
+                    solves_for: "V_REF",
+                    expression: "V_REF = PGA × FSR",
+                    inputs: &[
+                        VarDef {
+                            symbol: "PGA",
+                            name: "PGA gain",
+                            unit: "V/V",
+                            default: 1.0,
+                        },
+                        VarDef {
+                            symbol: "FSR",
+                            name: "Full-scale range",
+                            unit: "V",
+                            default: 5.0,
+                        },
+                    ],
+                    output_unit: "V",
+                    compute: |v| v[0] * v[1],
+                },
+                SolveVariant {
+                    solves_for: "PGA",
+                    expression: "PGA = V_REF / FSR",
+                    inputs: &[
+                        VarDef {
+                            symbol: "V_REF",
+                            name: "Reference voltage",
+                            unit: "V",
+                            default: 5.0,
+                        },
+                        VarDef {
+                            symbol: "FSR",
+                            name: "Full-scale range",
+                            unit: "V",
+                            default: 5.0,
+                        },
+                    ],
+                    output_unit: "V/V",
+                    compute: |v| v[0] / v[1],
+                },
+            ],
         },
         FormulaEntry {
             name: "LSB Size",
-            variants: &[SolveVariant {
-                solves_for: "LSB",
-                expression: "LSB = FSR / 2ⁿ",
-                inputs: &[
-                    VarDef {
-                        symbol: "FSR",
-                        name: "Full-scale range",
-                        unit: "V",
-                        default: 5.0,
-                    },
-                    VarDef {
-                        symbol: "n",
-                        name: "Resolution",
-                        unit: "bits",
-                        default: 12.0,
-                    },
-                ],
-                output_unit: "V",
-                compute: |v| v[0] / 2f64.powi(v[1] as i32),
-            }],
+            variants: &[
+                SolveVariant {
+                    solves_for: "LSB",
+                    expression: "LSB = FSR / 2ⁿ",
+                    inputs: &[
+                        VarDef {
+                            symbol: "FSR",
+                            name: "Full-scale range",
+                            unit: "V",
+                            default: 5.0,
+                        },
+                        VarDef {
+                            symbol: "n",
+                            name: "Resolution",
+                            unit: "bits",
+                            default: 12.0,
+                        },
+                    ],
+                    output_unit: "V",
+                    compute: |v| v[0] / 2f64.powi(v[1] as i32),
+                },
+                SolveVariant {
+                    solves_for: "FSR",
+                    expression: "FSR = 2ⁿ × LSB",
+                    inputs: &[
+                        VarDef {
+                            symbol: "LSB",
+                            name: "LSB size",
+                            unit: "V",
+                            default: 1.221e-3,
+                        },
+                        VarDef {
+                            symbol: "n",
+                            name: "Resolution",
+                            unit: "bits",
+                            default: 12.0,
+                        },
+                    ],
+                    output_unit: "V",
+                    compute: |v| v[0] * 2f64.powi(v[1] as i32),
+                },
+            ],
         },
         FormulaEntry {
             name: "ADC Output Code",
