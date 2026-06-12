@@ -6,6 +6,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "PCB Parallel Plate Capacitance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C",
                 expression: "C(pF) = k × l × w × εr / h  (k=8.854×10⁻³ pF/mm)",
@@ -41,6 +42,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Microstrip Inductance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "L",
                 expression: "L(nH) = kL × l × ln(5.98h / (0.8w + t))  (kL=2 nH/cm)",
@@ -76,6 +78,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Microstrip Capacitance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C",
                 expression: "C(pF) = kC × l × (εr+1.41) / ln(5.98h/(0.8w+t))  (kC=0.264 pF/cm)",
@@ -119,6 +122,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Microstrip Characteristic Impedance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "Z₀",
                 expression: "Z₀ = (87 / √(εr+1.41)) × ln(5.98h / (0.8w+t))",
@@ -156,6 +160,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Adjacent Traces Cap (Same Layer)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C",
                 expression: "C(pF) ≈ k × t × l / d  (k=8.854×10⁻³ pF/mm)",
@@ -185,6 +190,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Adjacent Traces Cap (Different Layers)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C",
                 expression: "C(pF) ≈ k × εr × w × l / h  (k=8.854×10⁻³ pF/mm)",
@@ -220,6 +226,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Via Inductance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "L",
                 expression: "L(nH) ≈ kL × h × [1 + ln(4h/d)]  (kL=0.2 nH/mm)",
@@ -243,6 +250,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PCB Via Capacitance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C",
                 expression: "C(pF) ≈ kC × εr × h × d₁ / (d₂−d₁)  (kC=0.0555 pF/mm)",
@@ -284,6 +292,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Coaxial Cable Capacitance per Length",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C/l",
                 expression: "C/l = 2πε / ln(D/d)",
@@ -316,6 +325,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Coaxial Cable Inductance per Length",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "L/l",
                 expression: "L/l = μ/(2π) × ln(D/d)",
@@ -348,6 +358,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Coaxial Cable Characteristic Impedance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "Z₀",
                 expression: "Z₀ = (1/2π) × √(μ/ε) × ln(D/d)",

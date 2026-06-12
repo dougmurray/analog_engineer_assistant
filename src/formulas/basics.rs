@@ -5,6 +5,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Ohm's Law ─────────────────────────────────────────────────────
         FormulaEntry {
             name: "Ohm's Law",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V",
@@ -71,6 +72,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Voltage Divider ───────────────────────────────────────────────
         FormulaEntry {
             name: "Voltage Divider",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_out",
@@ -155,6 +157,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Resistor combinations ─────────────────────────────────────────
         FormulaEntry {
             name: "Parallel Resistance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "R_eq",
                 expression: "R_eq = (R₁ × R₂) / (R₁ + R₂)",
@@ -178,6 +181,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Series Resistance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "R_eq",
                 expression: "R_eq = R₁ + R₂",
@@ -202,6 +206,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Impedance ─────────────────────────────────────────────────────
         FormulaEntry {
             name: "Inductor Impedance",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "|Z_L|",
@@ -267,6 +272,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Capacitor Impedance",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "|Z_C|",
@@ -333,6 +339,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── RC / LC Filters ───────────────────────────────────────────────
         FormulaEntry {
             name: "RC Filter Corner Frequency",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "f_c",
@@ -398,6 +405,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "LC Filter Corner Frequency",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "f_c",
@@ -470,6 +478,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Power ─────────────────────────────────────────────────────────
         FormulaEntry {
             name: "Power P = V × I",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "P",
@@ -535,6 +544,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Power P = V² / R",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "P",
@@ -600,6 +610,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Power P = I² × R",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "P",
@@ -666,6 +677,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── RC Time Constant ──────────────────────────────────────────────
         FormulaEntry {
             name: "RC Time Constant",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "τ",
@@ -731,6 +743,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "RC Charging Voltage",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_C",
                 expression: "V_C = V_s × (1 − e^(−t/RC))",
@@ -766,6 +779,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "RC Discharging Voltage",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_C",
                 expression: "V_C = V₀ × e^(−t/RC)",
@@ -802,6 +816,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Snubber ───────────────────────────────────────────────────────
         FormulaEntry {
             name: "Snubber Capacitor",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "C_snub",

@@ -5,6 +5,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Error ────────────────────────────────────────────────────────────
         FormulaEntry {
             name: "Error Percent",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "error%",
                 expression: "error% = ((measured − ideal) / ideal) × 100",
@@ -28,6 +29,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Error Percent of Full Scale",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "error%FS",
                 expression: "error%FS = ((measured − ideal) / FS) × 100",
@@ -58,6 +60,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── PPM / % / m% ──────────────────────────────────────────────────
         FormulaEntry {
             name: "PPM ↔ Percent",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "%",
@@ -87,6 +90,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PPM ↔ Milli-Percent",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "m%",
@@ -117,6 +121,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Code conversions ──────────────────────────────────────────────
         FormulaEntry {
             name: "Millivolts ↔ Codes",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "codes",
@@ -174,6 +179,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Percent ↔ Codes",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "codes",
@@ -219,6 +225,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "PPM ↔ Codes",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "codes",
@@ -265,6 +272,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Signal (peak / RMS) ───────────────────────────────────────────
         FormulaEntry {
             name: "Peak-to-Peak ↔ RMS",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_rms",
@@ -294,6 +302,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Peak ↔ RMS",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_rms",
@@ -324,6 +333,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Gain / dB ─────────────────────────────────────────────────────
         FormulaEntry {
             name: "Voltage Gain ↔ dB",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "dB",
@@ -353,6 +363,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Power Gain ↔ dB",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "dB",
@@ -383,6 +394,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         // ── Time / Phase ─────────────────────────────────────────────────
         FormulaEntry {
             name: "Time ↔ Phase",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "phase",

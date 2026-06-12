@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "LSB Size",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "LSB",
                 expression: "LSB = FSR / 2ⁿ",
@@ -27,6 +28,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Output Voltage from Code",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_out",
@@ -84,6 +86,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Full-Scale Output Voltage",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_FS",
                 expression: "V_FS = (2ⁿ − 1) × LSB",
@@ -110,6 +113,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Gain Error",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "GE",
                 expression: "GE(%) = ((m_measured − m_ideal) / m_ideal) × 100",
@@ -133,6 +137,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Total Unadjusted Error (TUE)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "TUE",
                 expression: "TUE = √(OffsetErr² + GainErr² + INLErr²)",

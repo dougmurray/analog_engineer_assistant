@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "Non-Inverting Gain",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_out",
@@ -113,6 +114,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Inverting Gain",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_out",
@@ -222,6 +224,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Noise Gain (Closed-Loop)",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "G_n",
@@ -287,6 +290,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp Bandwidth",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "BW",
@@ -396,6 +400,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Small-Signal Rise Time",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "t_rise",
@@ -425,6 +430,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Max Output Voltage (Slew Rate Limit)",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_peak",
@@ -490,6 +496,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Offset Voltage RTI",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_os_RTI",
                 expression: "V_os_RTI = √(V_os² + (I_b × R_f‖R_g)² + (I_b × R_ni)²)",
@@ -536,6 +543,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Offset Voltage RTO",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_os_RTO",
                 expression: "V_os_RTO = V_os_RTI × (1 + R_f / R_g)",
@@ -583,6 +591,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Resistor Thermal Noise",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "V_n",
@@ -612,6 +621,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp RTI Noise (RMS)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_n_RTI",
                 expression: "V_n_RTI = √(V_n² + V_Rf‖Rg² + V_Rni² + (I_n×R_f‖R_g)² + (I_n×R_ni)²) × √BW",
@@ -674,6 +684,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp RTO Noise (RMS)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_n_RTO",
                 expression: "V_n_RTO = V_n_RTI × (1 + R_f / R_g)",
@@ -737,6 +748,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp Power Dissipation (given V_out)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "P_diss",
                 expression: "P = (|I_load| + |I_fb|)×(|V_s|−|V_out|) + V_s×I_q",
@@ -788,6 +800,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp Max Power Dissipation",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "P_max",
                 expression: "P_max = V_s² / (4 × R_eq)   [DC output]",
@@ -826,6 +839,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Op-Amp Junction Temperature",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "T_j",
                 expression: "T_j = θ_ja × P + T_amb",
@@ -855,6 +869,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "In-Amp Common-Mode Filter Cutoff",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "f_cm",
@@ -920,6 +935,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "In-Amp Differential Filter Cutoff",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "f_diff",
                 expression: "f_diff = 1 / (2π × 2R_in × (C_diff + C_cm/2))",

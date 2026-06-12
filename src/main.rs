@@ -48,6 +48,9 @@ struct Cli {
     /// Open the Multiplexer topic
     #[arg(long)]
     multiplexer: bool,
+    /// Open the RF topic
+    #[arg(long)]
+    rf: bool,
 }
 
 impl Cli {
@@ -70,6 +73,8 @@ impl Cli {
             Some(7)
         } else if self.multiplexer {
             Some(8)
+        } else if self.rf {
+            Some(9)
         } else {
             None
         }

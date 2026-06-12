@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "Op-Amp Gain with MUX R_ON",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "AG",
                 expression: "AG = −R_F / (R1 + R_ON)",
@@ -33,6 +34,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "MUX ON Capacitance",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "C_ON",
                 expression: "C_ON ≈ C_S + C_D",
@@ -56,6 +58,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "MUX Settling Time (Simple)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "t_settle",
                 expression: "t_settle = t_transition + R_ON × C_D × K",
@@ -91,6 +94,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "MUX Settling Time (with R_LOAD / C_LOAD)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "t_settle",
                 expression: "t_settle = t_tr + (R_ON‖R_L)×(C_L+C_D)×K",
@@ -141,6 +145,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Leakage Error Voltage (Switch OFF)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_error",
                 expression: "V_error = R_L × I_D(OFF)",
@@ -164,6 +169,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Leakage Error Voltage (Switch ON)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_error",
                 expression: "V_error = (R_ON + R_source) × I_D(ON)",
@@ -193,6 +199,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Charge Injection Error",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_error",
                 expression: "V_error ≈ Q_INJ / C_L",
@@ -225,6 +232,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "MUX Bandwidth",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "f_-3dB",
@@ -291,6 +299,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Channel-to-Channel Crosstalk",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "X_TALK",
                 expression: "X_TALK = 20 × log(V_out / V_S)",
@@ -314,6 +323,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "OFF-Isolation",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "OFF_iso",
                 expression: "OFF_iso = 20 × log(V_out / V_in)",

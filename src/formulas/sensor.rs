@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "Thermistor R → T (Steinhart-Hart)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "T",
                 expression: "1/T = a + b·ln(R) + c·[ln(R)]³",
@@ -43,6 +44,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Thermistor T → R (Steinhart-Hart)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "R",
                 expression: "R = exp[(y − x/2)^(1/3) − (y + x/2)^(1/3)]",
@@ -84,6 +86,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Diode Voltage vs Temperature",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_D",
                 expression: "V_D = (nkT/q) × ln(I / I_s)",
@@ -123,6 +126,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Diode Saturation Current",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "I_s",
                 expression: "I_s = α × T^(3/n) × exp(qV_G / (nkT))",

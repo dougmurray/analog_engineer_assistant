@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "I²C Pull-Up Resistor (Minimum)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "R_min",
                 expression: "R_min = (V_DD − V_OL_max) / I_sink_max",
@@ -33,6 +34,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "I²C Pull-Up Resistor (Maximum)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "R_max",
                 expression: "R_max = t_r / (0.8473 × C_b)",

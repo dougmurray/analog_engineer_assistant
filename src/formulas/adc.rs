@@ -4,6 +4,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
     vec![
         FormulaEntry {
             name: "Full-Scale Range",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "FSR",
@@ -69,6 +70,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "LSB Size",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "LSB",
@@ -114,6 +116,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "ADC Output Code",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "code",
                 expression: "code = round(V_in × 2ⁿ / FSR)",
@@ -143,6 +146,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Max RMS Signal",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_rms_max",
                 expression: "V_rms_max = FSR / (2√2)",
@@ -158,6 +162,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "RMS Quantization Noise",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_noise",
                 expression: "V_noise = LSB / √12",
@@ -181,6 +186,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "SNR (Ideal, Quantization Only)",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "SNR",
@@ -210,6 +216,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "THD (Percent)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "THD%",
                 expression: "THD% = (V_distortion / V_signal) × 100",
@@ -233,6 +240,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "THD (dB)",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "THD",
                 expression: "THD(dB) = 20 × log(V_distortion / V_signal)",
@@ -256,6 +264,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "SINAD",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "SINAD",
                 expression: "SINAD(dB) = 20·log(V_sig / √(V_noise² + V_dist²))",
@@ -285,6 +294,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "ENOB",
+            note: None,
             variants: &[
                 SolveVariant {
                     solves_for: "ENOB",
@@ -314,6 +324,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Noise-Free Resolution",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "NFR",
                 expression: "NFR = log₂(2ᴺ / PeaktoPeakNoise_LSB)",
@@ -337,6 +348,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Effective Resolution",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "ER",
                 expression: "ER = log₂(2ᴺ / rmsNoise_LSB)",
@@ -360,6 +372,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Settling Accuracy → Time Constants",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "N_TC",
                 expression: "N_TC = ln(2ᴺ)",
@@ -375,6 +388,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "ADC Full-Scale RMS",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_FSR_RMS",
                 expression: "V_FSR_RMS = V_FSR × 0.707 / 2",
@@ -390,6 +404,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "ADC System Total Noise",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "V_nT",
                 expression: "V_nT = √(V_nADC² + V_nAmp² + V_nRef²)",
@@ -419,6 +434,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Clock Jitter SNR",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "SNR",
                 expression: "SNR = −20·log(2π × f_in × t_jitter)",
@@ -442,6 +458,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
         },
         FormulaEntry {
             name: "Clock Jitter SNR with Oversampling",
+            note: None,
             variants: &[SolveVariant {
                 solves_for: "SNR",
                 expression: "SNR = −20·log(2π×f_in×t_j) + 10·log(OSR)",

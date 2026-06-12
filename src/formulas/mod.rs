@@ -6,6 +6,7 @@ pub mod dac;
 pub mod digital;
 pub mod multiplexer;
 pub mod pcb_wire;
+pub mod rf;
 pub mod sensor;
 
 #[derive(Clone)]
@@ -28,6 +29,7 @@ pub struct SolveVariant {
 #[derive(Clone)]
 pub struct FormulaEntry {
     pub name: &'static str,
+    pub note: Option<&'static str>,
     pub variants: &'static [SolveVariant],
 }
 
@@ -74,6 +76,10 @@ pub fn all_topics() -> Vec<Topic> {
         Topic {
             name: "Multiplexer",
             formulas: multiplexer::formulas(),
+        },
+        Topic {
+            name: "RF",
+            formulas: rf::formulas(),
         },
     ]
 }

@@ -122,9 +122,10 @@ fn render_formula_calc(f: &mut Frame, app: &App, area: Rect) {
     };
 
     // Split area: top for expression + result, bottom for variable inputs
+    let top_height = if formula.note.is_some() { 9 } else { 8 };
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(8), Constraint::Min(0)])
+        .constraints([Constraint::Length(top_height), Constraint::Min(0)])
         .split(area);
 
     render_expression_block(f, app, chunks[0], formula.name, variant);
@@ -154,8 +155,16 @@ fn render_expression_block(
             variant.expression,
             Style::default().fg(Color::Cyan),
         )]),
-        Line::raw(""),
     ];
+
+    if let Some(note) = app.current_topic().formulas[app.formula_cursor].note {
+        lines.push(Line::from(vec![Span::styled(
+            note,
+            Style::default().fg(Color::DarkGray),
+        )]));
+    }
+
+    lines.push(Line::raw(""));
 
     // Result line
     let result_str = if let Some(val) = app.compute_result() {
