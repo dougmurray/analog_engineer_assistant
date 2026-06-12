@@ -141,7 +141,10 @@ pub fn formulas() -> Vec<FormulaEntry> {
                     },
                 ],
                 output_unit: "codes",
-                compute: |v| (v[0] * 2f64.powi(v[2] as i32) / v[1]).round(),
+                compute: |v| {
+                    let max_code = 2f64.powi(v[2] as i32) - 1.0;
+                    (v[0] * 2f64.powi(v[2] as i32) / v[1]).round().min(max_code)
+                },
             }],
         },
         FormulaEntry {

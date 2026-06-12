@@ -122,7 +122,10 @@ fn render_formula_calc(f: &mut Frame, app: &App, area: Rect) {
     };
 
     // Split area: top for expression + result, bottom for variable inputs
-    let top_height = if formula.note.is_some() { 9 } else { 8 };
+    let mut top_height = if formula.note.is_some() { 9 } else { 8 };
+    if variant.output_unit == "codes" {
+        top_height += 1;
+    }
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([Constraint::Length(top_height), Constraint::Min(0)])
@@ -183,6 +186,18 @@ fn render_expression_block(
             .fg(Color::Green)
             .add_modifier(Modifier::BOLD),
     )]));
+
+    // Hexadecimal representation of ADC output codes
+    if variant.output_unit == "codes"
+        && let Some(val) = app.compute_result()
+        && val.is_finite()
+        && val >= 0.0
+    {
+        lines.push(Line::from(vec![Span::styled(
+            format!("  =  0x{:X}", val as u64),
+            Style::default().fg(Color::Green),
+        )]));
+    }
 
     // Solve-for tab hint
     if n_variants > 1 {
