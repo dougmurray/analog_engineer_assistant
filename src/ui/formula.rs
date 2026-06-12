@@ -260,6 +260,7 @@ fn render_inputs_block(
     } else {
         None
     };
+    let show_divider = formula_name == "Voltage Divider";
 
     let mut lines: Vec<Line> = vec![Line::from(vec![Span::styled(
         "  Variables  (j/k to move, Enter/i to edit)",
@@ -341,6 +342,26 @@ fn render_inputs_block(
 
         if chunks[1].height > 2 {
             crate::ui::bode::render(f, chunks[1], f_c);
+        }
+    } else if show_divider {
+        let inputs_height = (lines.len() as u16) + 2;
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([Constraint::Length(inputs_height), Constraint::Min(0)])
+            .split(area);
+
+        let para = Paragraph::new(lines).block(block);
+        f.render_widget(para, chunks[0]);
+
+        if chunks[1].height > 2 {
+            crate::ui::divider::render(
+                f,
+                chunks[1],
+                app.variable_value("V_in"),
+                app.variable_value("R1"),
+                app.variable_value("R2"),
+                app.variable_value("V_out"),
+            );
         }
     } else {
         let para = Paragraph::new(lines).block(block);

@@ -122,6 +122,17 @@ impl App {
         parse_value(self.input_values.get(idx)?).filter(|v| v.is_finite() && *v > 0.0)
     }
 
+    /// Resolve the value of a named variable for the current variant,
+    /// whether it's the solved-for result or one of the inputs.
+    pub fn variable_value(&self, symbol: &str) -> Option<f64> {
+        let variant = self.current_variant()?;
+        if variant.solves_for == symbol {
+            return self.compute_result().filter(|v| v.is_finite());
+        }
+        let idx = variant.inputs.iter().position(|vd| vd.symbol == symbol)?;
+        parse_value(self.input_values.get(idx)?)
+    }
+
     // ── Key handlers ─────────────────────────────────────────────────────────
 
     pub fn handle_key(&mut self, key: crossterm::event::KeyCode) {

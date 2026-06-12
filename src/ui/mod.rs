@@ -1,4 +1,5 @@
 pub mod bode;
+pub mod divider;
 pub mod formula;
 pub mod nav;
 
