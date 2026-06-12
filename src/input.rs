@@ -1,9 +1,15 @@
-/// Parse a value string that may include SI prefixes or scientific notation.
-/// Examples: "1k" → 1000.0, "4.7u" → 4.7e-6, "1e-9" → 1e-9, "100m" → 0.1
+/// Parse a value string that may include SI prefixes, scientific notation, or
+/// a hexadecimal literal prefixed with "0x"/"0X".
+/// Examples: "1k" → 1000.0, "4.7u" → 4.7e-6, "1e-9" → 1e-9, "100m" → 0.1, "0xFFF" → 4095.0
 pub fn parse_value(s: &str) -> Option<f64> {
     let s = s.trim();
     if s.is_empty() {
         return None;
+    }
+
+    // Hexadecimal input, e.g. "0xFFF" or "0Xfff"
+    if let Some(hex_digits) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X")) {
+        return i64::from_str_radix(hex_digits, 16).ok().map(|v| v as f64);
     }
 
     // Check for trailing SI prefix (only if last char isn't part of exponent)
@@ -76,5 +82,12 @@ mod tests {
         assert!((parse_value("100n").unwrap() - 100e-9).abs() < 1e-20);
         assert!((parse_value("1e-3").unwrap() - 1e-3).abs() < 1e-15);
         assert!((parse_value("3.3").unwrap() - 3.3).abs() < 1e-9);
+    }
+
+    #[test]
+    fn test_hex_input() {
+        assert_eq!(parse_value("0xFFF").unwrap(), 4095.0);
+        assert_eq!(parse_value("0x800").unwrap(), 2048.0);
+        assert_eq!(parse_value("0Xff").unwrap(), 255.0);
     }
 }
