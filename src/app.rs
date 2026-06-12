@@ -111,6 +111,17 @@ impl App {
         Some((variant.compute)(&vals))
     }
 
+    /// Resolve the filter corner frequency for the current variant, whether
+    /// it's the solved-for result (`f_c`) or one of the inputs.
+    pub fn corner_frequency(&self) -> Option<f64> {
+        let variant = self.current_variant()?;
+        if variant.solves_for == "f_c" {
+            return self.compute_result().filter(|v| v.is_finite() && *v > 0.0);
+        }
+        let idx = variant.inputs.iter().position(|vd| vd.symbol == "f_c")?;
+        parse_value(self.input_values.get(idx)?).filter(|v| v.is_finite() && *v > 0.0)
+    }
+
     // ── Key handlers ─────────────────────────────────────────────────────────
 
     pub fn handle_key(&mut self, key: crossterm::event::KeyCode) {

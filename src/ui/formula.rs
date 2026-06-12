@@ -132,7 +132,7 @@ fn render_formula_calc(f: &mut Frame, app: &App, area: Rect) {
         .split(area);
 
     render_expression_block(f, app, chunks[0], formula.name, variant);
-    render_inputs_block(f, app, chunks[1], variant);
+    render_inputs_block(f, app, chunks[1], formula.name, variant);
 }
 
 fn render_expression_block(
@@ -247,9 +247,19 @@ fn render_inputs_block(
     f: &mut Frame,
     app: &App,
     area: Rect,
+    formula_name: &str,
     variant: &crate::formulas::SolveVariant,
 ) {
     let is_editing = app.mode == Mode::InputEdit;
+    let show_bode = matches!(
+        formula_name,
+        "RC Filter Corner Frequency" | "LC Filter Corner Frequency"
+    );
+    let corner_freq = if show_bode {
+        app.corner_frequency()
+    } else {
+        None
+    };
 
     let mut lines: Vec<Line> = vec![Line::from(vec![Span::styled(
         "  Variables  (j/k to move, Enter/i to edit)",
@@ -319,6 +329,21 @@ fn render_inputs_block(
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Green));
 
-    let para = Paragraph::new(lines).block(block);
-    f.render_widget(para, area);
+    if let Some(f_c) = corner_freq {
+        let inputs_height = (lines.len() as u16) + 2;
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([Constraint::Length(inputs_height), Constraint::Min(0)])
+            .split(area);
+
+        let para = Paragraph::new(lines).block(block);
+        f.render_widget(para, chunks[0]);
+
+        if chunks[1].height > 2 {
+            crate::ui::bode::render(f, chunks[1], f_c);
+        }
+    } else {
+        let para = Paragraph::new(lines).block(block);
+        f.render_widget(para, area);
+    }
 }
