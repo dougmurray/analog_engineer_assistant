@@ -20,6 +20,13 @@ pub struct SearchResult {
     pub label: String,
 }
 
+#[derive(Clone, Debug)]
+pub struct HistoryEntry {
+    pub variable: String,
+    pub value: f64,
+    pub unit: String,
+}
+
 pub struct App {
     pub topics: Vec<Topic>,
     pub mode: Mode,
@@ -39,6 +46,11 @@ pub struct App {
     pub search_query: String,
     pub search_results: Vec<SearchResult>,
     pub search_cursor: usize,
+
+    // Calculation history popup
+    pub history: Vec<HistoryEntry>,
+    pub history_cursor: usize,
+    pub show_history: bool,
 
     // Previous mode to restore on Esc from search
     prev_topic: usize,
@@ -68,6 +80,9 @@ impl App {
             search_query: String::new(),
             search_results: vec![],
             search_cursor: 0,
+            history: vec![],
+            history_cursor: 0,
+            show_history: false,
             prev_topic: 0,
             prev_formula: 0,
             prev_variant: 0,
@@ -135,21 +150,77 @@ impl App {
 
     // ── Key handlers ─────────────────────────────────────────────────────────
 
-    pub fn handle_key(&mut self, key: crossterm::event::KeyCode) {
-        use crossterm::event::KeyCode::*;
+    pub fn handle_key(&mut self, key: crossterm::event::KeyEvent) {
+        use crossterm::event::{KeyCode::*, KeyModifiers};
+        let code = key.code;
+
+        // H (Shift+h) toggles history overlay from any non-edit mode
+        if code == Char('H') && self.mode != Mode::InputEdit {
+            self.show_history = !self.show_history;
+            if self.show_history {
+                self.history_cursor = self.history.len().saturating_sub(1);
+            }
+            return;
+        }
+
+        // When history overlay is open, intercept navigation/copy/close keys
+        if self.show_history {
+            match code {
+                Char('j') | Down => {
+                    let n = self.history.len();
+                    if n > 0 {
+                        self.history_cursor = (self.history_cursor + 1).min(n - 1);
+                    }
+                }
+                Char('k') | Up => {
+                    self.history_cursor = self.history_cursor.saturating_sub(1);
+                }
+                Esc => self.show_history = false,
+                Char('y') => self.copy_selected_history(),
+                Char('c') if key.modifiers.contains(KeyModifiers::SUPER) => {
+                    self.copy_selected_history();
+                }
+                _ => {}
+            }
+            return;
+        }
 
         // "/" always opens search from any non-edit mode
-        if key == Char('/') && self.mode != Mode::InputEdit {
+        if code == Char('/') && self.mode != Mode::InputEdit {
             self.open_search();
             return;
         }
 
         match self.mode.clone() {
-            Mode::TopicList => self.handle_topic_list(key),
-            Mode::FormulaList => self.handle_formula_list(key),
-            Mode::FormulaView => self.handle_formula_view(key),
-            Mode::InputEdit => self.handle_input_edit(key),
-            Mode::Search => self.handle_search(key),
+            Mode::TopicList => self.handle_topic_list(code),
+            Mode::FormulaList => self.handle_formula_list(code),
+            Mode::FormulaView => self.handle_formula_view(code),
+            Mode::InputEdit => self.handle_input_edit(code),
+            Mode::Search => self.handle_search(code),
+        }
+    }
+
+    fn push_history(&mut self) {
+        if let Some(val) = self.compute_result()
+            && val.is_finite()
+            && let Some(variant) = self.current_variant()
+        {
+            let entry = HistoryEntry {
+                variable: variant.solves_for.to_string(),
+                value: val,
+                unit: variant.output_unit.to_string(),
+            };
+            self.history.push(entry);
+            if self.history.len() > 100 {
+                self.history.remove(0);
+            }
+        }
+    }
+
+    fn copy_selected_history(&self) {
+        // Items are displayed newest-first, so index 0 is the last pushed entry
+        if let Some(entry) = self.history.get(self.history_cursor) {
+            copy_to_clipboard(&format_eng_sci(entry.value));
         }
     }
 
@@ -184,6 +255,7 @@ impl App {
                 self.input_cursor = 0;
                 self.reset_inputs();
                 self.mode = Mode::FormulaView;
+                self.push_history();
             }
             Char('h') | Char('g') | Esc | Backspace => self.mode = Mode::TopicList,
             _ => {}
@@ -231,6 +303,7 @@ impl App {
                 self.edit_buffer.clear();
                 self.edit_is_fresh = false;
                 self.mode = Mode::FormulaView;
+                self.push_history();
             }
             Esc => {
                 self.edit_buffer.clear();
@@ -324,6 +397,7 @@ impl App {
                     self.reset_inputs();
                     self.search_query.clear();
                     self.mode = Mode::FormulaView;
+                    self.push_history();
                 }
             }
             Char('j') | Down => {
@@ -350,5 +424,43 @@ impl App {
     pub fn should_quit(&self, key: crossterm::event::KeyCode) -> bool {
         key == crossterm::event::KeyCode::Char('q')
             && (self.mode == Mode::TopicList || self.mode == Mode::FormulaList)
+    }
+}
+
+fn copy_to_clipboard(text: &str) {
+    use std::io::Write;
+    use std::process::{Command, Stdio};
+    if let Ok(mut child) = Command::new("pbcopy").stdin(Stdio::piped()).spawn() {
+        if let Some(stdin) = child.stdin.take() {
+            let _ = std::io::BufWriter::new(stdin).write_all(text.as_bytes());
+        }
+        let _ = child.wait();
+    }
+}
+
+/// Format a value in engineering notation: exponent is always a multiple of 3.
+/// E.g. 0.723 → "723e-3", 4700 → "4.7e3", 0.00015 → "150e-6".
+fn format_eng_sci(value: f64) -> String {
+    if value == 0.0 {
+        return "0e0".to_string();
+    }
+    if !value.is_finite() {
+        return format!("{value}");
+    }
+    let exp = value.abs().log10().floor() as i32;
+    // Snap exponent down to the nearest multiple of 3.
+    // For negatives, Rust's truncating division needs the bias of -2 to floor correctly.
+    let eng_exp = if exp >= 0 {
+        (exp / 3) * 3
+    } else {
+        ((exp - 2) / 3) * 3
+    };
+    let mantissa = value / 10f64.powi(eng_exp);
+    let s = format!("{:.4}", mantissa);
+    let s = s.trim_end_matches('0').trim_end_matches('.');
+    if eng_exp == 0 {
+        s.to_string()
+    } else {
+        format!("{s}e{eng_exp}")
     }
 }

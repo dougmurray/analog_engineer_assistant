@@ -115,7 +115,7 @@ fn run(terminal: &mut Terminal<CrosstermBackend<io::Stdout>>, app: &mut App) -> 
             if app.should_quit(key.code) {
                 return Ok(());
             }
-            app.handle_key(key.code);
+            app.handle_key(key);
         }
     }
 }

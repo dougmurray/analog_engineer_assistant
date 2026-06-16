@@ -1,6 +1,7 @@
 pub mod bode;
 pub mod divider;
 pub mod formula;
+pub mod history;
 pub mod nav;
 
 use ratatui::{
@@ -27,6 +28,21 @@ pub fn render(f: &mut Frame, app: &App) {
     formula::render(f, app, chunks[1]);
     render_search_bar(f, app, search_area);
     render_command_bar(f, app, cmd_area);
+
+    if app.show_history {
+        history::render(f, app, history_popup_rect(main_area));
+    }
+}
+
+fn history_popup_rect(area: Rect) -> Rect {
+    let w = 52u16.min(area.width);
+    let h = 14u16.min(area.height);
+    Rect::new(
+        area.right().saturating_sub(w),
+        area.bottom().saturating_sub(h),
+        w,
+        h,
+    )
 }
 
 fn split_areas(area: Rect) -> (Rect, Rect, Rect) {
@@ -54,69 +70,91 @@ fn render_command_bar(f: &mut Frame, app: &App, area: Rect) {
         |d: &'static str| Span::styled(format!(" {}  ", d), Style::default().fg(Color::DarkGray));
     let sep = || Span::styled(" ", Style::default());
 
-    let spans: Vec<Span> = match app.mode {
-        Mode::TopicList => vec![
+    let spans: Vec<Span> = if app.show_history {
+        vec![
             key("j/k"),
-            desc("Move"),
+            desc("Scroll"),
             sep(),
-            key("l/Enter"),
-            desc("Open"),
+            key("y"),
+            desc("Copy Value"),
             sep(),
-            key("/"),
-            desc("Search"),
-            sep(),
-            key("q"),
-            desc("Quit"),
-        ],
-        Mode::FormulaList => vec![
-            key("j/k"),
-            desc("Move"),
-            sep(),
-            key("l/Enter"),
-            desc("Open"),
-            sep(),
-            key("h/Esc"),
-            desc("Back"),
-            sep(),
-            key("/"),
-            desc("Search"),
-            sep(),
-            key("q"),
-            desc("Quit"),
-        ],
-        Mode::FormulaView => vec![
-            key("j/k"),
-            desc("Select Input"),
-            sep(),
-            key("i/Enter"),
-            desc("Edit"),
-            sep(),
-            key("Tab"),
-            desc("Cycle Variant"),
-            sep(),
-            key("h/Esc"),
-            desc("Back"),
-            sep(),
-            key("/"),
-            desc("Search"),
-        ],
-        Mode::InputEdit => vec![
-            key("Enter"),
-            desc("Confirm"),
-            sep(),
-            key("Esc"),
-            desc("Cancel"),
-        ],
-        Mode::Search => vec![
-            key("j/k"),
-            desc("Move"),
-            sep(),
-            key("Enter"),
-            desc("Jump to Formula"),
-            sep(),
-            key("Esc"),
-            desc("Cancel"),
-        ],
+            key("H/Esc"),
+            desc("Close"),
+        ]
+    } else {
+        match app.mode {
+            Mode::TopicList => vec![
+                key("j/k"),
+                desc("Move"),
+                sep(),
+                key("l/Enter"),
+                desc("Open"),
+                sep(),
+                key("/"),
+                desc("Search"),
+                sep(),
+                key("H"),
+                desc("History"),
+                sep(),
+                key("q"),
+                desc("Quit"),
+            ],
+            Mode::FormulaList => vec![
+                key("j/k"),
+                desc("Move"),
+                sep(),
+                key("l/Enter"),
+                desc("Open"),
+                sep(),
+                key("h/Esc"),
+                desc("Back"),
+                sep(),
+                key("/"),
+                desc("Search"),
+                sep(),
+                key("H"),
+                desc("History"),
+                sep(),
+                key("q"),
+                desc("Quit"),
+            ],
+            Mode::FormulaView => vec![
+                key("j/k"),
+                desc("Select Input"),
+                sep(),
+                key("i/Enter"),
+                desc("Edit"),
+                sep(),
+                key("Tab"),
+                desc("Cycle Variant"),
+                sep(),
+                key("h/Esc"),
+                desc("Back"),
+                sep(),
+                key("/"),
+                desc("Search"),
+                sep(),
+                key("H"),
+                desc("History"),
+            ],
+            Mode::InputEdit => vec![
+                key("Enter"),
+                desc("Confirm"),
+                sep(),
+                key("Esc"),
+                desc("Cancel"),
+            ],
+            Mode::Search => vec![
+                key("j/k"),
+                desc("Move"),
+                sep(),
+                key("Enter"),
+                desc("Jump to Formula"),
+                sep(),
+                key("Esc"),
+                desc("Cancel"),
+            ],
+        }
     };
 
     let para = Paragraph::new(Line::from(spans));
