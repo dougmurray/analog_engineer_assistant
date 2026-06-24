@@ -17,6 +17,7 @@ pub fn parse_value(s: &str) -> Option<f64> {
         // Don't treat 'e'/'E' suffix as SI — it's part of sci notation
         let has_exp = s.to_lowercase().contains('e');
         match last {
+            'f' if !has_exp => (&s[..s.len() - 1], 1e-15),
             'p' if !has_exp => (&s[..s.len() - 1], 1e-12),
             'n' if !has_exp => (&s[..s.len() - 1], 1e-9),
             'u' if !has_exp => (&s[..s.len() - 1], 1e-6),
@@ -61,6 +62,8 @@ pub fn format_eng(value: f64) -> String {
         (value / 1e-9, "n")
     } else if abs >= 1e-12 {
         (value / 1e-12, "p")
+    } else if abs >= 1e-15 {
+        (value / 1e-15, "f")
     } else {
         (value, "")
     };
@@ -80,6 +83,7 @@ mod tests {
         assert!((parse_value("1k").unwrap() - 1000.0).abs() < 1e-9);
         assert!((parse_value("4.7u").unwrap() - 4.7e-6).abs() < 1e-18);
         assert!((parse_value("100n").unwrap() - 100e-9).abs() < 1e-20);
+        assert!((parse_value("4.7f").unwrap() - 4.7e-15).abs() < 1e-27);
         assert!((parse_value("1e-3").unwrap() - 1e-3).abs() < 1e-15);
         assert!((parse_value("3.3").unwrap() - 3.3).abs() < 1e-9);
     }
