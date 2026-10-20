@@ -1,9 +1,9 @@
 use ratatui::{
+    Frame,
     layout::Rect,
     style::{Color, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph},
-    Frame,
 };
 
 use crate::input::format_eng;
@@ -21,7 +21,9 @@ pub fn render(
     let v_in_label = v_in.map_or("V_in".to_string(), |v| format!("{}V", format_eng(v)));
     let r1_label = r1.map_or("R1".to_string(), |v| format!("R1 = {}Ω", format_eng(v)));
     let r2_label = r2.map_or("R2".to_string(), |v| format!("R2 = {}Ω", format_eng(v)));
-    let v_out_label = v_out.map_or("V_out".to_string(), |v| format!("V_out = {}V", format_eng(v)));
+    let v_out_label = v_out.map_or("V_out".to_string(), |v| {
+        format!("V_out = {}V", format_eng(v))
+    });
 
     let label_style = Style::default().fg(Color::White);
     let wire_style = Style::default().fg(Color::DarkGray);

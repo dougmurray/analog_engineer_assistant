@@ -236,7 +236,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
                             symbol: "|Z_L|",
                             name: "Impedance",
                             unit: "Ω",
-                            default: 6.283,
+                            default: std::f64::consts::TAU,
                         },
                         VarDef {
                             symbol: "f",
@@ -256,7 +256,7 @@ pub fn formulas() -> Vec<FormulaEntry> {
                             symbol: "|Z_L|",
                             name: "Impedance",
                             unit: "Ω",
-                            default: 6.283,
+                            default: std::f64::consts::TAU,
                         },
                         VarDef {
                             symbol: "L",
