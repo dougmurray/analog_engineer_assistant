@@ -473,5 +473,65 @@ pub fn formulas() -> Vec<FormulaEntry> {
                 compute: |v| (v[0] * v[1]).sqrt(),
             }],
         },
+        FormulaEntry {
+            name: "Air-Core Inductor (Wheeler)",
+            note: Some(
+                "Wheeler's single-layer approximation: L in μH, d = coil diameter in inches, l = coil length in inches, n = number of turns.",
+            ),
+            variants: &[
+                SolveVariant {
+                    solves_for: "L",
+                    expression: "L(μH) = (d² × n²) / (18d + 40l)",
+                    inputs: &[
+                        VarDef {
+                            symbol: "d",
+                            name: "Coil diameter",
+                            unit: "in",
+                            default: 0.5,
+                        },
+                        VarDef {
+                            symbol: "l",
+                            name: "Coil length",
+                            unit: "in",
+                            default: 1.0,
+                        },
+                        VarDef {
+                            symbol: "n",
+                            name: "Number of turns",
+                            unit: "",
+                            default: 10.0,
+                        },
+                    ],
+                    output_unit: "H",
+                    compute: |v| (v[0] * v[0] * v[2] * v[2]) / (18.0 * v[0] + 40.0 * v[1]) * 1e-6,
+                },
+                SolveVariant {
+                    solves_for: "n",
+                    expression: "n = sqrt(L(μH) × (18d + 40l)) / d",
+                    inputs: &[
+                        VarDef {
+                            symbol: "L",
+                            name: "Inductance",
+                            unit: "H",
+                            default: 0.5e-6,
+                        },
+                        VarDef {
+                            symbol: "d",
+                            name: "Coil diameter",
+                            unit: "in",
+                            default: 0.5,
+                        },
+                        VarDef {
+                            symbol: "l",
+                            name: "Coil length",
+                            unit: "in",
+                            default: 1.0,
+                        },
+                    ],
+                    output_unit: "",
+                    compute: |v| (v[0] * 1e6 * (18.0 * v[1] + 40.0 * v[2])).sqrt() / v[1],
+                },
+            ],
+        },
     ]
 }
